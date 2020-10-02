@@ -4,24 +4,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/*TODO:
- * V lock cursor when in level 01
- * V Find quit panel object
- * V when esc is pressed, call panel to active
- * V unlock cursor when panel is active
- * ? pause the game when panel is active (Lock update?)
- * V if esc is pressed and panel is active, make activen't
- * V lock cursor when panel is not active
- * V Find good copyright free music replacement :c
- * 
+/*
+ * TODO:
+ * Call Mouse Look function to stop camera movement while the menu is open.
 */
 
 public class Level01Controller : MonoBehaviour
 {
-    [SerializeField] GameObject _menuQuit;
+    [SerializeField] GameObject _menuQuit = null;
+    //public GameObject mainCamera;
+    //private MouseLook _mouse;//get reference to camera mouse control
     //GameObject _menuQuit;
 
-    [SerializeField] Text _currentScoreTextView;
+    [SerializeField] Text _currentScoreTextView = null;
 
     int _currentScore;
     string highScoreSt = "HighScore";
@@ -32,7 +27,7 @@ public class Level01Controller : MonoBehaviour
         //lock the cursor when the game starts
         lockCursor(true);
 
-        //_menuQuit = GameObject.Find("/Canvas/QuitMenu_pnl");
+        //_mouse = _MainCamera.GetComponent<MouseLook>();//FindObjectOfType<MouseLook>(); 
     }
 
     // Update is called once per frame
@@ -63,7 +58,7 @@ public class Level01Controller : MonoBehaviour
 
     public void OpenMenu()
     {
-        Debug.Log("Menu is Active? :: "+ _menuQuit.activeSelf);
+        //Debug.Log("Menu is Active? :: "+ _menuQuit.activeSelf);
         //_menuQuit.activeSelf
         if (_menuQuit.activeSelf)
         {
@@ -87,11 +82,15 @@ public class Level01Controller : MonoBehaviour
     {
         if (activateLock)
         {
+            //_mouse.stopCamera(true);
+            //_mouse.timeToStop = true;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
         else
         {
+            //_mouse.stopCamera(false);
+            //_mouse.timeToStop = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }

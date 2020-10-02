@@ -6,7 +6,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance = null;
-    [SerializeField] AudioClip _startingSong;
+    [SerializeField] AudioClip _startingSong = null;
 
     AudioSource _audioSource;
 
