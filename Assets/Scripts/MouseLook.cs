@@ -6,6 +6,8 @@ public class MouseLook : MonoBehaviour
 {
     public float mouseSensitivity = 300f;
     public bool timeToStop = false;
+    public float FieldOfView = 60f;
+    public float FieldOfViewRunning = 90f;
 
     public Transform playerBody;
 
@@ -28,10 +30,4 @@ public class MouseLook : MonoBehaviour
             playerBody.Rotate(Vector3.up * mouseX);
         }
     }
-    /*
-    public void stopCamera(bool stop)
-    {
-        Debug.Log("Stopping mouse from moving camera...");
-        timeToStop = stop;
-    }*/
 }

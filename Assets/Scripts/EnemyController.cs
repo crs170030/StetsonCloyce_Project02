@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public int enemyDamage = 10;
+    public int enemyDamage = 10; //https://www.youtube.com/watch?v=3fiwlk3PWTc
     public float bounce = 10f;
     public float fireRate = 5f;
     public float rotateStrength = .5f;
+    public float attackRadius = 50f;
+    public float health = 70f;
+
+    public float shootForce = 5000f;
+    public float projLifetime = 20f;
 
     public Transform target;
     public GameObject lazer;
@@ -15,26 +20,64 @@ public class EnemyController : MonoBehaviour
     public Rigidbody rbBall;
     //public GameObject goEnemy;
 
+    public AudioClip shootLaser;
+    public AudioClip alert;
+    public AudioClip destroySound;
+    public AudioSource _enemySounds;
+
     //public PlayerMovement _player;
     private float nextTimeToFire;
+    private float reAdjust;
+    private bool hasNoticed = false;
 
     void Start()
     {
         rbBall = GetComponent<Rigidbody>();
+        _enemySounds = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        //slowly turn towards player
-        Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
-        float str = Mathf.Min(rotateStrength * Time.deltaTime, 1);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
+        float distance = Vector3.Distance(target.position, transform.position);
+        //if player is within x radius of enemy
+        if (distance <= attackRadius) {
 
-        //if facing player and reloadTime is == 0, call shoot script to fire gun
-        if (Time.time >= nextTimeToFire)
+            if (!hasNoticed)
+            {
+                _enemySounds.pitch = 1f;
+                _enemySounds.PlayOneShot(alert, 1f);
+                //wait a bit before firing
+                nextTimeToFire = Time.time + (fireRate * 1.5f);
+            }
+
+            hasNoticed = true;
+
+            //slowly turn towards player
+            /*
+            Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
+            float str = Mathf.Min(rotateStrength * Time.deltaTime, 1);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
+            */
+            transform.LookAt(target);
+
+            //if reloadTime is == 0, call shoot script to fire gun
+            if (Time.time >= nextTimeToFire)
+            {
+                nextTimeToFire = Time.time + fireRate;
+                //Debug.Log("Distance between enemy and player == " + distance);
+                FireWeapon();
+            }
+        }
+        else
         {
-            nextTimeToFire = Time.time + fireRate;
-            FireWeapon();
+            //if player has gone out of range, play low alert sound
+            if (hasNoticed)
+            {
+                _enemySounds.pitch = .7f;
+                _enemySounds.PlayOneShot(alert, 1f);
+            }
+
+            hasNoticed = false;
         }
     }
 
@@ -60,6 +103,32 @@ public class EnemyController : MonoBehaviour
 
     void FireWeapon()
     {
-        GameObject lazerGO = Instantiate(lazer, (enemyGun.transform.position + Vector3.forward), transform.rotation);
+        //create lazer clone at enemy gun
+        GameObject lazerGO = Instantiate(lazer, (enemyGun.transform.position), transform.rotation);
+        //move lazer forward by x force
+        lazerGO.GetComponent<Rigidbody>().AddForce(transform.forward * shootForce);
+
+        //play Lazer noise
+        _enemySounds.PlayOneShot(shootLaser, 1f);
+
+        //destroy projectile after x seconds
+        Destroy(lazerGO, projLifetime);
+    }
+
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+        if (health <= 0f)
+        {
+            StartCoroutine(Die());
+        }
+    }
+
+    IEnumerator Die()
+    {
+        _enemySounds.PlayOneShot(destroySound, 1f);
+        //_targetSounds.Play();
+        yield return new WaitForSeconds(.4f);
+        Destroy(gameObject);
     }
 }

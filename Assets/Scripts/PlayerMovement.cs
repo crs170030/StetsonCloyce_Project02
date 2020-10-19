@@ -42,11 +42,13 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
             {
                 runMultiplyer = run;
+                _levelController.SprintFOV(true);
                 //Debug.Log("Gotta go fast! Run Multiplyer == " + runMultiplyer);
             }
             else if (!Input.GetKey(KeyCode.LeftShift))
             {
                 runMultiplyer = 1f;
+                _levelController.SprintFOV(false);
             }
 
             //move character with a and d

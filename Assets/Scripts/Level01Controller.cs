@@ -6,19 +6,29 @@ using UnityEngine.UI;
 
 /*
  * TODO:
- * V  Call Mouse Look function to stop camera movement while the menu is open.
- * V  Make gun move backwards and return to postion when shooting
- * V  Make impact effect work
- * V  Create Health system for player
- * V  create damage volume to hurt player
- * V  make player hud with health bar and score
+ *  ~ Fix enemy not turning back all the way when it is bounced by a shot
+ *  add sound to when targets are destroyed
+ *  move death sound and explosion code to level controller so targets and enemys can share code and die in peace
+ *  V add death sound
+ *  add death screen effect (red filter?)
+ *  
+ *  V make player fov increase while running
+ *  make enemy gun tilt downward when not hostile
+ *  make jump sound
+ *  
+ *  Stretch goals:
+ *  Level Design
+ *  Make Enemy Move towards player
+ *  Power Ups? -(Gun glows and is 3x powerfull in force and damage)(Speed increase)
+ *  Health Pack Pick up
+ *  Make Rocket Enemy
 */
 
 public class Level01Controller : MonoBehaviour
 {
     [SerializeField] GameObject _menuQuit = null;
     public GameObject _player  = null;
-    public GameObject _camera = null;
+    //public GameObject _camera = null;
     public GunController _gun;
     public PlayerMovement _pm;
     private MouseLook _mouse;//get reference to camera mouse control
@@ -33,17 +43,31 @@ public class Level01Controller : MonoBehaviour
 
     public int maxHealth = 100;
     public int currentHealth;
+    public int healthWarning = 25;
 
     public HealthBar healthBar;
+
+    public float c_FOV = 60f;
+    public float c_FOVRunning = 70f;
+
+    public AudioClip lowHealth;
+    public AudioClip damagedSound;
+    public AudioClip deathSound;
+    public AudioSource _playerSounds;
 
     private void Start()
     {
         //lock the cursor when the game starts
         lockCursor(true);
+        //make sure game is not paused
+        Time.timeScale = 1;
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         //_mouse = FindObjectOfType<MouseLook>();
+        //_camera = FindObjectOfType
+
+        _playerSounds = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -90,6 +114,10 @@ public class Level01Controller : MonoBehaviour
             menuOpen = false;
             _menuQuit.SetActive(false);
             //Cursor.lockState = CursorLockMode.Locked;
+
+            //Time has resumed
+            //Soshite toki wa ugaki dasu
+            Time.timeScale = 1;
         }
         else
         {
@@ -98,6 +126,9 @@ public class Level01Controller : MonoBehaviour
             _menuQuit.SetActive(true);
             //add cursor lock
             lockCursor(false);
+
+            //ZA WARUDO TOKI WO TOMARE!
+            Time.timeScale = 0;
         }
 
         if (!dead)//stop gun shooting and player movement if dead
@@ -134,10 +165,16 @@ public class Level01Controller : MonoBehaviour
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
+        _playerSounds.PlayOneShot(damagedSound, 1f);
 
         if(currentHealth <= 0)
         {
             Kill();
+        }
+        else if(currentHealth <= healthWarning)
+        {
+            //play low health sound
+            _playerSounds.PlayOneShot(lowHealth, 1f);
         }
     }
 
@@ -148,7 +185,22 @@ public class Level01Controller : MonoBehaviour
         //_camera.SetActive(true);
         _menuDeath.SetActive(true);
         dead = true;
+        _playerSounds.PlayOneShot(deathSound, 1f);
         OpenMenu();
+    }
+
+    public void SprintFOV(bool isSprinting)
+    {
+        if (isSprinting)
+        {
+            Camera.main.fieldOfView = c_FOVRunning;
+            //_camera.fieldOfView = c_FOVRunning;
+        }
+        else
+        {
+            Camera.main.fieldOfView = c_FOV;
+            //_camera.fieldOfView = c_FOV;
+        }
     }
 
     public void ExitLevel()

@@ -68,9 +68,14 @@ public class GunController : MonoBehaviour
 
             Target target = hit.transform.GetComponent<Target>();
 
-            if(target != null)
+            EnemyController enemy = hit.transform.GetComponent<EnemyController>();
+
+            if (target != null)
             {
                 target.TakeDamage(damage);
+            }else if(enemy != null)
+            {
+                enemy.TakeDamage(damage);
             }
 
             if(hit.rigidbody != null)
