@@ -23,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
     float runMultiplyer = 1f;
 
+    public AudioClip jumpSound;
+    public AudioSource _playerSounds;
+
     void Update()
     {
         if (!pmMenuIsOpen)
@@ -61,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                _playerSounds.PlayOneShot(jumpSound, 1f);
             }
 
             //set velocity to gravity

@@ -7,21 +7,28 @@ using UnityEngine.UI;
 /*
  * TODO:
  *  ~ Fix enemy not turning back all the way when it is bounced by a shot
- *  add sound to when targets are destroyed
- *  move death sound and explosion code to level controller so targets and enemys can share code and die in peace
+ *  V add sound to when targets are destroyed
+ *  X move death sound and explosion code to level controller so targets and enemys can share code and die in peace
  *  V add death sound
- *  add death screen effect (red filter?)
+ *  V add death screen effect (red filter?)
+ *  
+ *  make sound work- on audio manager: import scene tools, check scene number, play based on current scene
+ *  add audio track to slot on audio manager
  *  
  *  V make player fov increase while running
- *  make enemy gun tilt downward when not hostile
- *  make jump sound
+ *  ~ make enemy gun tilt downward when not hostile (gravity tilts the enemy face downward)
+ *  V make jump sound
+ *  V made plateu and death trigger at bottom of world
+ *  make win condition
  *  
  *  Stretch goals:
- *  Level Design
+ *  V Level Design -Wild West Town
  *  Make Enemy Move towards player
  *  Power Ups? -(Gun glows and is 3x powerfull in force and damage)(Speed increase)
  *  Health Pack Pick up
- *  Make Rocket Enemy
+ *  Make gun have 6 bullets
+ *  Make reload mechanic and animation
+ *  X Make Rocket Enemy
 */
 
 public class Level01Controller : MonoBehaviour
@@ -32,7 +39,8 @@ public class Level01Controller : MonoBehaviour
     public GunController _gun;
     public PlayerMovement _pm;
     private MouseLook _mouse;//get reference to camera mouse control
-    public GameObject _menuDeath = null;
+    public GameObject _menuDeath = null; //reference for menu
+    public GameObject _bloody = null;    //reference for death screen filter
 
     [SerializeField] Text _currentScoreTextView = null;
 
@@ -115,9 +123,12 @@ public class Level01Controller : MonoBehaviour
             _menuQuit.SetActive(false);
             //Cursor.lockState = CursorLockMode.Locked;
 
-            //Time has resumed
-            //Soshite toki wa ugaki dasu
-            Time.timeScale = 1;
+            if (!dead)//if player is dead, then don't resume time
+            {
+                //Time has resumed
+                //Soshite toki wa ugaki dasu
+                Time.timeScale = 1;
+            }
         }
         else
         {
@@ -131,6 +142,7 @@ public class Level01Controller : MonoBehaviour
             Time.timeScale = 0;
         }
 
+        //may not be fully necessary but I will keep it to stop sprint and jump effects even if they don't do anything
         if (!dead)//stop gun shooting and player movement if dead
         {
             _gun.menuIsOpen = menuOpen;
@@ -184,8 +196,11 @@ public class Level01Controller : MonoBehaviour
         //_player.SetActive(false);
         //_camera.SetActive(true);
         _menuDeath.SetActive(true);
+        _bloody.SetActive(true);
+        if(!dead)
+            _playerSounds.PlayOneShot(deathSound, 1f); //only play dead sound once
+
         dead = true;
-        _playerSounds.PlayOneShot(deathSound, 1f);
         OpenMenu();
     }
 

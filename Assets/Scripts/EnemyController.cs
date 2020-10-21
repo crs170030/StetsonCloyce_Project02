@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     public GameObject lazer;
     public GameObject enemyGun;
     public Rigidbody rbBall;
-    //public GameObject goEnemy;
+    public GameObject explosionEffect;
 
     public AudioClip shootLaser;
     public AudioClip alert;
@@ -120,6 +120,7 @@ public class EnemyController : MonoBehaviour
         health -= amount;
         if (health <= 0f)
         {
+            //target.IncreaseScore(10);
             StartCoroutine(Die());
         }
     }
@@ -128,6 +129,8 @@ public class EnemyController : MonoBehaviour
     {
         _enemySounds.PlayOneShot(destroySound, 1f);
         //_targetSounds.Play();
+        GameObject explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
+        Destroy(explosionGO, 1.5f);
         yield return new WaitForSeconds(.4f);
         Destroy(gameObject);
     }

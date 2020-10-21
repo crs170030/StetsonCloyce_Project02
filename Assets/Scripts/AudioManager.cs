@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance = null;
     [SerializeField] AudioClip _startingSong = null;
+    [SerializeField] AudioClip _combatSong = null;
 
     AudioSource _audioSource;
 
@@ -21,7 +22,7 @@ public class AudioManager : MonoBehaviour
             //fill references
             _audioSource = GetComponent<AudioSource>();
             //PlaySong(_startingSong);
-            PlaySong();
+            PlaySong(0);
         }
         else
         {
@@ -37,8 +38,22 @@ public class AudioManager : MonoBehaviour
         _audioSource.Play();
     }
     */
-    public void PlaySong()
+    public void PlaySong(int songNumber)
     {
-        _audioSource.PlayOneShot(_startingSong, .3f);
+        switch (songNumber)
+        {
+            case 0:
+                Debug.Log("Playing Exploration music...");
+                _audioSource.PlayOneShot(_startingSong, .3f);
+                break;
+            case 1:
+                Debug.Log("Playing Combat music...");
+                _audioSource.PlayOneShot(_combatSong, .3f);
+                break;
+
+            default:
+                Debug.Log("Stopping Music");
+                break;
+        }
     }
 }

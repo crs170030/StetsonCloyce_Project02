@@ -127,6 +127,7 @@ MonoBehaviour:
   health: 50
   destroySound: {fileID: 8300000, guid: 45cc07a18a2e988408c7326ef5fce524, type: 3}
   _targetSounds: {fileID: 648122080}
+  explosionEffect: {fileID: 0}
 --- !u!82 &648122080
 AudioSource:
   m_ObjectHideFlags: 0
@@ -145,7 +146,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 69
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

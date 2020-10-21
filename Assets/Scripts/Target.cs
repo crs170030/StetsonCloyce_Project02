@@ -9,6 +9,7 @@ public class Target : MonoBehaviour
     public AudioSource _targetSounds;
 
     public GameObject explosionEffect;
+    GameObject explosionGO;
 
     public void TakeDamage(float amount)
     {
@@ -18,13 +19,15 @@ public class Target : MonoBehaviour
             //Die();
             StartCoroutine(Die());
         }
+        //explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
+        //Destroy(explosionGO, 15f);
     }
 
     IEnumerator Die()
     {
         _targetSounds.PlayOneShot(destroySound, 1f);
         //_targetSounds.Play();
-        GameObject explosionGO = Instantiate(explosionEffect, transform);
+        explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
         Destroy(explosionGO, 1.5f);
         yield return new WaitForSeconds(.4f);
         Destroy(gameObject);
