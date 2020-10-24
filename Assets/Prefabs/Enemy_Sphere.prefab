@@ -352,7 +352,7 @@ MonoBehaviour:
   bounce: 400
   fireRate: 2
   rotateStrength: 2
-  attackRadius: 50
+  attackRadius: 60
   health: 70
   shootForce: 2500
   projLifetime: 20

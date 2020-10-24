@@ -11,8 +11,12 @@ public class AudioManager : MonoBehaviour
 
     AudioSource _audioSource;
 
+    string currentScene;
+
     private void Awake()
     {
+        //currentScene = SceneManager.GetActiveScene().name;
+        //Debug.Log("Active Scene is " + currentScene + ".");
         #region Singleton Pattern (Simple)
         if(Instance == null)
         {
@@ -44,15 +48,18 @@ public class AudioManager : MonoBehaviour
         {
             case 0:
                 Debug.Log("Playing Exploration music...");
+                _audioSource.Stop();
                 _audioSource.PlayOneShot(_startingSong, .3f);
                 break;
             case 1:
                 Debug.Log("Playing Combat music...");
+                _audioSource.Stop();
                 _audioSource.PlayOneShot(_combatSong, .3f);
                 break;
 
             default:
                 Debug.Log("Stopping Music");
+                _audioSource.Stop();
                 break;
         }
     }

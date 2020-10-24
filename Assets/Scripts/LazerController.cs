@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- *TODO:
- * Make Projectile move in direction its facing 
- * Make parent projectile not disappear
-*/
-
 public class LazerController : MonoBehaviour
 {
     //Need to make sure it is facing a correct inherited direction when fired
@@ -20,7 +14,7 @@ public class LazerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Lazer Hit : " + other.name);
+        //Debug.Log("Lazer Hit : " + other.name);
 
         //detect if it's the player
         PlayerMovement _player = other.gameObject.GetComponent<PlayerMovement>();
@@ -30,13 +24,13 @@ public class LazerController : MonoBehaviour
         //if valid:
         if (_player != null)
         {
-            Debug.Log("Lazer has hit " + _player.name);
+            //Debug.Log("Lazer has hit " + _player.name);
 
             _player.TakeDamage(projectileDamage);
 
         }else if(_target != null)
         {
-            Debug.Log("Lazer has hit " + _target.name);
+            //Debug.Log("Lazer has hit " + _target.name);
 
             _target.TakeDamage(projectileDamage);
         }

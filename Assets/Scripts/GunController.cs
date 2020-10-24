@@ -64,7 +64,7 @@ public class GunController : MonoBehaviour
         //if the shot hit something...
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
-            Debug.Log(hit.transform.name + " was shot!");
+            //Debug.Log(hit.transform.name + " was shot!");
 
             Target target = hit.transform.GetComponent<Target>();
 

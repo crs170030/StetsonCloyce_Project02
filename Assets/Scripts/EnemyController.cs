@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
     public float rotateStrength = .5f;
     public float attackRadius = 50f;
     public float health = 70f;
+    public int bounty = 100;
 
     public float shootForce = 5000f;
     public float projLifetime = 20f;
@@ -86,7 +87,6 @@ public class EnemyController : MonoBehaviour
         //detect if it's the player
         PlayerMovement _player = other.gameObject.GetComponent<PlayerMovement>();
         
-
         //if valid:
         if (_player != null)
         {
@@ -120,7 +120,13 @@ public class EnemyController : MonoBehaviour
         health -= amount;
         if (health <= 0f)
         {
+            Debug.Log("I, "+ gameObject.name +" am dead! Distributing bounty...");
             //target.IncreaseScore(10);
+            //call level controller to increase score
+            Level01Controller _lc1 = FindObjectOfType<Level01Controller>();
+            _lc1.IncreaseScore(bounty);
+
+            //start death procedure
             StartCoroutine(Die());
         }
     }

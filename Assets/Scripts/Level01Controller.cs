@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /*
@@ -12,8 +12,8 @@ using UnityEngine.UI;
  *  V add death sound
  *  V add death screen effect (red filter?)
  *  
- *  make sound work- on audio manager: import scene tools, check scene number, play based on current scene
- *  add audio track to slot on audio manager
+ *  V make sound work- on audio manager: import scene tools, check scene number, play based on current scene
+ *  V add audio track to slot on audio manager
  *  
  *  V make player fov increase while running
  *  ~ make enemy gun tilt downward when not hostile (gravity tilts the enemy face downward)
@@ -36,8 +36,9 @@ public class Level01Controller : MonoBehaviour
     [SerializeField] GameObject _menuQuit = null;
     public GameObject _player  = null;
     //public GameObject _camera = null;
-    public GunController _gun;
-    public PlayerMovement _pm;
+    public GunController _gun;  //ref to stop shooting when paused
+    public PlayerMovement _pm;  //ref to stop movement when paused
+    public SceneLoader _sl;     //ref to use scene loader script for music functionality
     private MouseLook _mouse;//get reference to camera mouse control
     public GameObject _menuDeath = null; //reference for menu
     public GameObject _bloody = null;    //reference for death screen filter
@@ -106,7 +107,7 @@ public class Level01Controller : MonoBehaviour
         //increase score
         _currentScore += scoreIncrease;
         //update score display so we can see new score
-        _currentScoreTextView.text = "Score: " + _currentScore.ToString();
+        _currentScoreTextView.text = "Score: $" + _currentScore.ToString();
     }
 
     public void OpenMenu()
@@ -230,6 +231,7 @@ public class Level01Controller : MonoBehaviour
         }
         //load level
         lockCursor(false); //unlocks cursor in case it was locked when scene changes
-        SceneManager.LoadScene("MainMenu");
+        //SceneManager.LoadScene("MainMenu");
+        _sl.LoadScene("MainMenu");
     }
 }
