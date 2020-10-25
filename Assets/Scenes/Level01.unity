@@ -15125,8 +15125,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 219.95001, y: -37.5}
-  m_SizeDelta: {x: 400, y: 75}
+  m_AnchoredPosition: {x: 348.6, y: -41.54001}
+  m_SizeDelta: {x: 657.25775, y: 83.08443}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2040769010
 MonoBehaviour:
@@ -15241,8 +15241,8 @@ MonoBehaviour:
   controller: {fileID: 2042138192}
   speed: 12
   run: 2.5
-  jumpHeight: 3
-  gravity: -19.62
+  jumpHeight: 4
+  gravity: -39.24
   groundCheck: {fileID: 952670869}
   groundDistance: 0.4
   groundMask:
