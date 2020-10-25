@@ -298,7 +298,8 @@ public class Level01Controller : MonoBehaviour
         //_camera.SetActive(true);
         _menuDeath.SetActive(true);
         _bloody.SetActive(true);
-        if(!dead)
+        _sl._audio.PlaySong(9); //call sceneloader to stop music
+        if (!dead)
             _playerSounds.PlayOneShot(deathSound, 1f); //only play dead sound once
 
         dead = true;

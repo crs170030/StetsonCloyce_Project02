@@ -120,16 +120,18 @@ public class EnemyController : MonoBehaviour
 
     void FireWeapon()
     {
+        /*
         if (gameObject.name == "Enemy_BOOS")
         {
             //if boss, shoot from front
-            lazerPosition = enemyGun.transform.position + (Vector3.right * 1.1f); 
+            lazerPosition = enemyGun.transform.position * (Vector3.right * 1.5f); 
         }
         else
         {
             //if not boss, shoot from left
             lazerPosition = enemyGun.transform.position; 
-        }
+        }*/
+        lazerPosition = enemyGun.transform.position;
 
         //create lazer clone at enemy gun
         GameObject lazerGO = Instantiate(lazer, lazerPosition, transform.rotation);

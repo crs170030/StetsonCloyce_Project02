@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb021fbcca0d0b47898a66713c71905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startingSong: {fileID: 8300000, guid: 194b7f34bee484f42be59d7759cd21e0, type: 3}
+  _combatSong: {fileID: 8300000, guid: 625fa74b146a1034ca4ddb225414a521, type: 3}
 --- !u!82 &8074805398869666031
 AudioSource:
   m_ObjectHideFlags: 0
@@ -54,15 +56,15 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 082a6f67833ad4841845b51d15637e09, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 194b7f34bee484f42be59d7759cd21e0, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.497
+  m_Pitch: 0.9
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 209
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

@@ -13314,7 +13314,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.7, y: 241.6}
+  m_AnchoredPosition: {x: 3.7000008, y: 241.6}
   m_SizeDelta: {x: 950.2859, y: 84.88838}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1697070958
@@ -13567,7 +13567,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1746506354
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14337,10 +14337,10 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 2800000, guid: 8eafd498e5f926c4799a7267cc872b5f, type: 3}
   m_DrawHalo: 1
-  m_Flare: {fileID: 12100000, guid: 09ebe82dbd1113c3d000dc0b8d76c639, type: 2}
-  m_RenderMode: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -17230,6 +17230,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8074805398869666000, guid: 0366a2550abcddb4fa7244cda29541e3,
+        type: 3}
+      propertyPath: _startingSong
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8074805398869666000, guid: 0366a2550abcddb4fa7244cda29541e3,
+        type: 3}
+      propertyPath: _combatSong
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8074805398869666001, guid: 0366a2550abcddb4fa7244cda29541e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17290,6 +17300,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8074805398869666031, guid: 0366a2550abcddb4fa7244cda29541e3,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 194b7f34bee484f42be59d7759cd21e0, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0366a2550abcddb4fa7244cda29541e3, type: 3}
 --- !u!114 &8074805398325509297 stripped
