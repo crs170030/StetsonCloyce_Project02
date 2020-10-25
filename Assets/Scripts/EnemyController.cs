@@ -137,7 +137,7 @@ public class EnemyController : MonoBehaviour
         lazerGO.GetComponent<Rigidbody>().AddForce(transform.forward * shootForce);
 
         //play Lazer noise
-        _enemySounds.PlayOneShot(shootLaser, 1f);
+        _enemySounds.PlayOneShot(shootLaser, .5f);
 
         //destroy projectile after x seconds
         Destroy(lazerGO, projLifetime);
@@ -163,15 +163,16 @@ public class EnemyController : MonoBehaviour
             //call level controller to increase score
             Level01Controller _lc1 = FindObjectOfType<Level01Controller>();
             _lc1.IncreaseScore(bounty);
-
-            //start death procedure
-            StartCoroutine(Die());
+            if (gameObject.name == "Enemy_BOOS")
+                _lc1.KillBoss();
+           //start death procedure
+           StartCoroutine(Die());
         }
     }
 
     IEnumerator Die()
     {
-        _enemySounds.PlayOneShot(destroySound, 1f);
+        _enemySounds.PlayOneShot(destroySound, .5f);
         //_targetSounds.Play();
         GameObject explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
         if (gameObject.name == "Enemy_BOOS")
