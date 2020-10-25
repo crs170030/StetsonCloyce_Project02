@@ -4,6 +4,7 @@ using System.Collections;
 public class Target : MonoBehaviour
 {
     public float health = 50f;
+    public int destructionReward = 5;
 
     public AudioClip destroySound;
     public AudioSource _targetSounds;
@@ -18,6 +19,9 @@ public class Target : MonoBehaviour
         {
             //Die();
             StartCoroutine(Die());
+
+            Level01Controller _lc1 = FindObjectOfType<Level01Controller>();
+            _lc1.IncreaseScore(destructionReward);
         }
         //explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
         //Destroy(explosionGO, 15f);

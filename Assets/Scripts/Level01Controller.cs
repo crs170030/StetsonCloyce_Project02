@@ -19,13 +19,19 @@ using UnityEngine.UI;
  *  ~ make enemy gun tilt downward when not hostile (gravity tilts the enemy face downward)
  *  V make jump sound
  *  V made plateu and death trigger at bottom of world
- *  make win condition
+ *  V make win condition (Kill everyone, collect currency)
+ *  
+ *  change timer to float type
+ *  make money effect just stay there for a few seconds
  *  
  *  Stretch goals:
  *  V Level Design -Wild West Town
- *  Make Enemy Move towards player
- *  Power Ups? -(Gun glows and is 3x powerfull in force and damage)(Speed increase)
+ *  V Make Enemy Move towards player
+ *  V Make Boss Enemy
+ *  X Power Ups? -(Gun glows and is 3x powerfull in force and damage)(Speed increase)
+ *  Make time slow powerup
  *  Health Pack Pick up
+ *  Money Pick Up
  *  Make gun have 6 bullets
  *  Make reload mechanic and animation
  *  X Make Rocket Enemy
@@ -42,13 +48,22 @@ public class Level01Controller : MonoBehaviour
     private MouseLook _mouse;//get reference to camera mouse control
     public GameObject _menuDeath = null; //reference for menu
     public GameObject _bloody = null;    //reference for death screen filter
+    public GameObject _menuWin = null;
 
     [SerializeField] Text _currentScoreTextView = null;
+    [SerializeField] Text _currentTimeTextView = null;
+    [SerializeField] Text _scoreIncreaseTextView = null;
 
+    public int timeLimit = 120;
     int _currentScore;
+    int _timeRemaining = 0;
+    int _scoreIncrease;
     string highScoreSt = "HighScore";
+    public int spawnScore = 1000;
+    public int winScore = 2000;
     bool menuOpen = false;
     bool dead = false;
+    bool timerIsRunning = true;
 
     public int maxHealth = 100;
     public int currentHealth;
@@ -62,6 +77,7 @@ public class Level01Controller : MonoBehaviour
     public AudioClip lowHealth;
     public AudioClip damagedSound;
     public AudioClip deathSound;
+    public AudioClip winSound;
     public AudioSource _playerSounds;
 
     private void Start()
@@ -70,6 +86,7 @@ public class Level01Controller : MonoBehaviour
         lockCursor(true);
         //make sure game is not paused
         Time.timeScale = 1;
+        _timeRemaining = timeLimit;
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
@@ -82,7 +99,8 @@ public class Level01Controller : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!menuOpen && !dead) //don't take player input while paused
+        //debug code for damage and score
+        /*if (!menuOpen && !dead) //don't take player input while paused
         {
             //Increase Score
             if (Input.GetKeyDown(KeyCode.Q))
@@ -94,11 +112,31 @@ public class Level01Controller : MonoBehaviour
             {
                 TakeDamage(20);
             }
-        }
+        }*/
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OpenMenu();
+        }
+
+        if (timerIsRunning)
+        {
+            if(_timeRemaining > 0)
+            {
+                _timeRemaining -= (int)Time.deltaTime;
+                _currentTimeTextView.text = "Time: " + _timeRemaining.ToString();
+            }
+            else
+            {
+                Debug.Log("Time has run out!");
+                _timeRemaining = 0;
+                _currentTimeTextView.text = "Time: " + _timeRemaining.ToString();
+                timerIsRunning = false;
+                if(_currentScore < winScore)
+                {
+
+                }
+            }
         }
     }
 
@@ -108,7 +146,52 @@ public class Level01Controller : MonoBehaviour
         _currentScore += scoreIncrease;
         //update score display so we can see new score
         _currentScoreTextView.text = "Score: $" + _currentScore.ToString();
+        //StartCoroutine(moneyEffect(_currentScore));
+        money(_currentScore);
+
+        //check if all enemies are dead
+        if ((_currentScore >= spawnScore) && (_currentScore < (int)(spawnScore * 1.9))) //if 10 members are dead, but dont duplicate
+        {
+            Debug.Log("The Gang is Dead! Here comes da boss!");
+            BossController _boss = FindObjectOfType<BossController>();
+            _boss.Spawn();
+        }
+
+        if(_currentScore >= winScore)
+        {
+            StartCoroutine(WinScreen());//call victory when score is over limit
+        }
     }
+
+    void money(int monScore)
+    {
+        //StartCoroutine(moneyEffect(_currentScore));
+        _scoreIncreaseTextView.transform.position = new Vector3(463f, 350f, -133f);
+        _scoreIncreaseTextView.gameObject.SetActive(true);
+        _scoreIncreaseTextView.text = "$" + monScore.ToString();
+        for (int i = 0; i < 100; i++)
+        {
+            _scoreIncreaseTextView.transform.position += new Vector3(0f, 0.001f, 0f);
+        }
+        //_scoreIncreaseTextView.transform
+
+        _scoreIncreaseTextView.gameObject.SetActive(false);
+    }
+
+    /*IEnumerator moneyEffect(int monScore)
+    {
+        _scoreIncreaseTextView.transform.position = new Vector3(463f, 350f, -133f);
+        _scoreIncreaseTextView.gameObject.SetActive(true);
+        _scoreIncreaseTextView.text = "$" + monScore.ToString();
+        for(int i = 0; i<100; i++)
+        {
+            _scoreIncreaseTextView.transform.position += new Vector3(0f,1f,0f);
+        }
+        //_scoreIncreaseTextView.transform
+
+        _scoreIncreaseTextView.gameObject.SetActive(false);
+        //return 1;
+    }*/
 
     public void OpenMenu()
     {
@@ -233,5 +316,14 @@ public class Level01Controller : MonoBehaviour
         lockCursor(false); //unlocks cursor in case it was locked when scene changes
         //SceneManager.LoadScene("MainMenu");
         _sl.LoadScene("MainMenu");
+    }
+
+    IEnumerator WinScreen()
+    {
+        Debug.Log("The Orange Organization is defeated. Player Wins.");
+        _playerSounds.PlayOneShot(winSound, 1f);
+        _menuWin.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        ExitLevel();
     }
 }

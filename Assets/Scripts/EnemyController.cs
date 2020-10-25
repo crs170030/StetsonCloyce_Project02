@@ -8,9 +8,12 @@ public class EnemyController : MonoBehaviour
     public float bounce = 10f;
     public float fireRate = 5f;
     public float rotateStrength = .5f;
-    public float attackRadius = 50f;
+    public float attackRadius = 60f;
+    public float moveCloserRadius = 80f;
+    public float moveAwayRadius = 10f;
     public float health = 70f;
     public int bounty = 100;
+    public float speed = 12f;
 
     public float shootForce = 5000f;
     public float projLifetime = 20f;
@@ -26,15 +29,22 @@ public class EnemyController : MonoBehaviour
     public AudioClip destroySound;
     public AudioSource _enemySounds;
 
-    //public PlayerMovement _player;
+    Vector3 lazerPosition;
     private float nextTimeToFire;
     private float reAdjust;
     private bool hasNoticed = false;
+    bool isDead = false;
+    float pitchEffect = 1f;
 
     void Start()
     {
         rbBall = GetComponent<Rigidbody>();
         _enemySounds = GetComponent<AudioSource>();
+
+        if(gameObject.name == "Enemy_BOOS")
+        {
+            pitchEffect = .5f;
+        }
     }
 
     void Update()
@@ -43,9 +53,9 @@ public class EnemyController : MonoBehaviour
         //if player is within x radius of enemy
         if (distance <= attackRadius) {
 
-            if (!hasNoticed)
+            if (!hasNoticed)//if enemy has just noticed player
             {
-                _enemySounds.pitch = 1f;
+                _enemySounds.pitch = 1f * pitchEffect;
                 _enemySounds.PlayOneShot(alert, 1f);
                 //wait a bit before firing
                 nextTimeToFire = Time.time + (fireRate * 1.5f);
@@ -61,6 +71,14 @@ public class EnemyController : MonoBehaviour
             */
             transform.LookAt(target);
 
+            if(distance <= moveAwayRadius)//if player is too close, back away a bit
+            {
+                rbBall.velocity = -transform.forward * (speed/2);
+            }else if (distance >= moveCloserRadius) //if 60 < distance < 80
+            {
+                rbBall.velocity = transform.forward * speed;
+            }
+
             //if reloadTime is == 0, call shoot script to fire gun
             if (Time.time >= nextTimeToFire)
             {
@@ -71,14 +89,13 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            //if player has gone out of range, play low alert sound
+            //player has just gone out of attack range
             if (hasNoticed)
             {
-                _enemySounds.pitch = .7f;
+                _enemySounds.pitch = .7f * pitchEffect;
                 _enemySounds.PlayOneShot(alert, 1f);
-            }
-
-            hasNoticed = false;
+                hasNoticed = false;
+            }           
         }
     }
 
@@ -103,8 +120,19 @@ public class EnemyController : MonoBehaviour
 
     void FireWeapon()
     {
+        if (gameObject.name == "Enemy_BOOS")
+        {
+            //if boss, shoot from front
+            lazerPosition = enemyGun.transform.position + (Vector3.right * 1.1f); 
+        }
+        else
+        {
+            //if not boss, shoot from left
+            lazerPosition = enemyGun.transform.position; 
+        }
+
         //create lazer clone at enemy gun
-        GameObject lazerGO = Instantiate(lazer, (enemyGun.transform.position), transform.rotation);
+        GameObject lazerGO = Instantiate(lazer, lazerPosition, transform.rotation);
         //move lazer forward by x force
         lazerGO.GetComponent<Rigidbody>().AddForce(transform.forward * shootForce);
 
@@ -118,9 +146,19 @@ public class EnemyController : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
-        if (health <= 0f)
+        //if shot by player and has not noticed, make enemy angry and always chase player
+        if (!hasNoticed)
+        {
+            attackRadius = Vector3.Distance(target.position, transform.position) * 1.15f;
+            Debug.Log("Shot me in the back? Now I'm angry! Attack radius == " + attackRadius);
+            //moveCloserRadius = attackRadius + 20f; 
+            //hasNoticed = true;
+        }
+
+        if (health <= 0f && !isDead)//if health is below zero and is not already dead
         {
             Debug.Log("I, "+ gameObject.name +" am dead! Distributing bounty...");
+            isDead = true;
             //target.IncreaseScore(10);
             //call level controller to increase score
             Level01Controller _lc1 = FindObjectOfType<Level01Controller>();
@@ -136,6 +174,15 @@ public class EnemyController : MonoBehaviour
         _enemySounds.PlayOneShot(destroySound, 1f);
         //_targetSounds.Play();
         GameObject explosionGO = Instantiate(explosionEffect, transform.position, transform.rotation);
+        if (gameObject.name == "Enemy_BOOS")
+        {
+            Debug.Log("The Boss is dead!");
+            //_enemySounds.pitch = .5f;
+            explosionGO.transform.localScale = new Vector3(4f,4f,4f); //make explosion much bigger
+        }
+        else
+            explosionGO.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f); //make explosion lil bigger
+
         Destroy(explosionGO, 1.5f);
         yield return new WaitForSeconds(.4f);
         Destroy(gameObject);
